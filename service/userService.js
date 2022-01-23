@@ -1,13 +1,14 @@
 const userModel = require('../models/userModel');
 const tokenService = require('./tokenService')
 const bcrypt = require('bcrypt');
+const ApiError = require('../exceptions/ApiError');
 
 
 
 class UserService {
     async registration(username, password) {
             if(await userModel.findOne({username})) {
-                throw new Error('user already exist');
+                throw ApiError.BadRequest('user already exists');
             }
             const salt = await bcrypt.genSalt();
             const hash = await bcrypt.hash(password, salt);
@@ -25,10 +26,10 @@ class UserService {
     }
     async login(username,password) {
             const user = await userModel.findOne({username});
-            if(!user) throw new Error('user not exist');
+            if(!user) throw ApiError.BadRequest('user not exist');
 
             const match = await bcrypt.compare(password, user.hash);
-            if(!match) throw new Error('invalid password');
+            if(!match) throw ApiError.BadRequest('invalid password');
 
             const tokens = tokenService.generateTokens({username, id: user._id});
             await tokenService.saveToken(user._id, tokens.refreshToken);
@@ -41,13 +42,13 @@ class UserService {
     }
     async refresh(refreshToken) {
         if(!refreshToken) {
-            throw new Error('not auth')
+            throw ApiError.ForbiddenError();
         }
         const check = tokenService.validateRefresh(refreshToken);
         const tokenFromDb = await tokenService.findToken(refreshToken);
 
         if(!check || !tokenFromDb) {
-            throw new Error('not auth');
+            throw ApiError.ForbiddenError();
         }
 
         const user = await userModel.findById(check.id);
