@@ -2,7 +2,7 @@ const Router = require('express');
 const router = new Router();
 const authRouter = require('./authRouter');
 const userRouter = require('./userRouter');
-const roomRouter = reqiore('./roomRouter');
+const roomRouter = require('./roomRouter');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 router.use('/', authRouter);
