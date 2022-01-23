@@ -8,7 +8,7 @@ class UserController {
             const user = await userModel.findOne({username}).select('-hash -_id -__v');
             res.json(user)
         }catch(e) {
-            console.log(e)
+            next(e)
         }
     }
 }

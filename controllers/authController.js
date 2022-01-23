@@ -8,8 +8,7 @@ class AuthController {
            res.cookie('refreshToken',userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly:true});
            res.json({userData})
         }catch(e) {
-            console.log(e);
-            res.json(e)
+            next(e);
         }
     }
     async registration(req,res,next) {
@@ -18,8 +17,7 @@ class AuthController {
             res.cookie('refreshToken',userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly:true});
             res.json({userData})
         }catch(e) {
-            console.log(e);
-            res.json(e);
+            next(e);
         }
     }
     async refresh(req,res,next) {
@@ -32,8 +30,7 @@ class AuthController {
             res.json(userData);
 
         }catch(e) {
-            console.log(e)
-            res.json(e)
+            next(e);
         }
     }
 }
