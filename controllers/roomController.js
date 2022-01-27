@@ -1,7 +1,8 @@
-const { json } = require('express/lib/response');
 const ApiError = require('../exceptions/ApiError');
 const roomModel = require('../models/roomModel');
 const roomService = require('../service/roomService');
+const GetService = require('../service/getService');
+const RoomDto = require('../dtos/room-dto');
 
 
 class RoomController {
@@ -16,9 +17,13 @@ class RoomController {
             next(e);
         }
     }
-    getAllRooms(req,res,next) {
+    async getAllRooms(req,res,next) {
         try{
+            const {limit = 10,offset = 1} = req.query;
+            const arr = await new GetService(roomModel).getAll(limit,offset);
+            const rooms = arr.map(room =>  new RoomDto(room).isCloseMethod());
             
+            res.json({length:rooms.length, rooms});
         }catch(e) {
             next(e);
         }
