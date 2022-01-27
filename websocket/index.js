@@ -20,15 +20,16 @@ module.exports = (server) => {
         const objParams = queryString.parse(params);
         const access = await tokenService.validateAccess(objParams.accessToken);
         if(!access) ws.close(1008, 'accessToken is invalid');
+        ws.user = access;
+        ws.isAlive = true;
 
-        const arr = ['username' ,'roomId'];
+        const arr = ['roomId'];
         arr.forEach(el => {
             if(!objParams[el]) ws.close(1008, 'exist ' + el);
             ws[el] = objParams[el];
         })
-        const wsEvent = new WSEvent()
-        wsEvent.event(websocketServer,ws)
-
+        const wsEvent = new WSEvent();
+        wsEvent.event(websocketServer,ws);
     })
     return websocketServer;
 }
