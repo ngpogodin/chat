@@ -1,6 +1,6 @@
 # chat
 
-Simple chat server. REST API with upgrade to websocket,when enter the chat room.
+Simple chat server. REST API(node.js/express,mongoDB/mongoose) with upgrade to websocket,when enter the chat room.
 
 ## Key Concept and Endpoints description
 
