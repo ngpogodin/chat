@@ -2,6 +2,7 @@ const userModel = require('../models/userModel');
 const tokenService = require('./tokenService')
 const bcrypt = require('bcrypt');
 const ApiError = require('../exceptions/ApiError');
+const UserDto = require('../dtos/user-dto');
 
 
 
@@ -19,7 +20,7 @@ class UserService {
             await tokenService.saveToken(user._id, tokens.refreshToken);
 
             return {
-                user,
+                user:new UserDto(user),
                 ...tokens
             }
 
@@ -35,7 +36,7 @@ class UserService {
             await tokenService.saveToken(user._id, tokens.refreshToken);
 
             return {
-                user,
+                user:new UserDto(user),
                 ...tokens
             }
 
@@ -55,7 +56,7 @@ class UserService {
         const tokens = tokenService.generateTokens({username:user.username, id: user._id});
         await tokenService.saveToken(user._id,tokens.refreshToken)
         return {
-            user,
+            user:new UserDto(user),
             ...tokens
         }
     }
